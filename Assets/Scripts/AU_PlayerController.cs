@@ -23,12 +23,26 @@ public class AU_PlayerController : MonoBehaviour
     static Color myColor;
     SpriteRenderer myAvatarSprite;
 
+    [SerializeField] bool isImposter;
+    [SerializeField] InputAction KILL;
+
+    AU_PlayerController target;
+    [SerializeField] Collider myCollider;
+
+    bool isDead;
+
+    private void Awake() {
+        KILL.performed += KillTarget;
+    }
+
     private void OnEnable() {
         WASD.Enable();
+        KILL.Enable();
     }
 
     private void OnDisable() {
         WASD.Disable();
+        KILL.Disable();
     }
 
     // Start is called before the first frame update
@@ -45,12 +59,18 @@ public class AU_PlayerController : MonoBehaviour
         if(myColor == Color.clear) {
             myColor = Color.white;
         }
+        if(!hasControl) {
+            return;
+        }
         myAvatarSprite.color = myColor;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!hasControl) {
+            return;
+        }
         movementInput = WASD.ReadValue<Vector2>();
 
         if (movementInput.x != 0) {
@@ -70,5 +90,28 @@ public class AU_PlayerController : MonoBehaviour
         {
             myAvatarSprite.color = myColor;
         }
+    }
+
+    public void SetRole(bool newRole) {
+        isImposter = newRole;
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Player")
+        {
+            AU_PlayerController tempTarget = other.GetComponent<AU_PlayerController>();
+            if (isImposter) {
+                if (tempTarget.isImposter)
+                    return;
+                else {
+                    target = tempTarget;
+                    Debug.Log(target.name);
+                }
+            }
+        }
+    }
+
+    void KillTarget(InputAction.CallbackContext context) {
+        
     }
 }
