@@ -105,13 +105,32 @@ public class AU_PlayerController : MonoBehaviour
                     return;
                 else {
                     target = tempTarget;
-                    Debug.Log(target.name);
+                    // Debug.Log(target.name);
                 }
             }
         }
     }
 
     void KillTarget(InputAction.CallbackContext context) {
-        
+        if(context.phase == InputActionPhase.Performed)
+        {
+            if(target == null)
+                return;
+            else
+            {
+                if (target.isDead)
+                    return;
+                transform.position = target.transform.position;
+                target.Die();
+                target = null;
+            }
+        }
+    }
+
+    public void Die() {
+        isDead = true;
+
+        MyAnim.SetBool("IsDead", isDead);
+        myCollider.enabled = false;
     }
 }
