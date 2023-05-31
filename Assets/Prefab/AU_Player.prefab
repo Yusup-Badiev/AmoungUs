@@ -317,7 +317,7 @@ MonoBehaviour:
       m_Action: KILL
       m_Flags: 0
     m_Flags: 0
-  myCollider: {fileID: 0}
+  myCollider: {fileID: 8010628756885741340}
 --- !u!95 &8103541332600640233
 Animator:
   serializedVersion: 4
